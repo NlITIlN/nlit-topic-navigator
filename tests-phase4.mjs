@@ -19,4 +19,15 @@ await vm.runInContext('transfer(true)',ctx);transfer=JSON.parse(vm.runInContext(
 vm.runInContext('caps={message:{text:{}}}',ctx);await vm.runInContext('showContext({id:"safe"})',ctx);assert.equal(node('draft').hidden,true);assert.equal(node('attach').hidden,true);assert.equal(node('send').hidden,false);
 vm.runInContext('caps={}',ctx);await vm.runInContext('showContext({id:"safe"})',ctx);assert.equal(node('send').hidden,true);
 vm.runInContext('caps={message:{text:{}}};rpc=async()=>{throw Error("timeout")}',ctx);await vm.runInContext('transfer(true)',ctx);assert.match(node('contextstatus').textContent,/Статус передачи неизвестен/);assert.equal(node('send').disabled,true);
+// A reused panel must clear its last catalog if the host changes scope between calls or loses it.
+for (const mismatch of [true, false]) {
+  for (const id of ["list","selected","treeitems","pageinfo","groupfilter","tagfilter"]) node(id).append(new Element());
+  ctx.mismatch = mismatch;
+  vm.runInContext('call=async name=>{if(!mismatch)throw Error("missing session");return {scopeFingerprint:name==="topics_list"?"A":"B"};}',ctx);
+  await vm.runInContext('refresh()',ctx);
+  for (const id of ["list","selected","treeitems","pageinfo","groupfilter","tagfilter"]) assert.equal(node(id).children.length,0);
+  assert.equal(node("selected").hidden,true);
+  assert.equal(node("next").disabled,true);
+  assert.match(node("status").textContent,mismatch?/Контекст чата изменился/:/missing session/);
+}
 console.log('PASS phase4: web fallback, capability gating, per-instance context attach/clear/restore, no global selection mutation, explicit draft/send separation, uncertain-send lockout');

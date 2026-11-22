@@ -32,6 +32,7 @@ yarn-error.log*
 *.pem
 
 # Checkout-local tool state
+/.openai/hosting.json
 /.wrangler/
 /.sites-runtime/
 

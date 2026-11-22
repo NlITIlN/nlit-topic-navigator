@@ -64,6 +64,20 @@
       "when": 1794927135368,
       "tag": "0008_faithful_scorpion",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1795368244852,
+      "tag": "0009_chat_scope_registry",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1795375091315,
+      "tag": "0010_auto_topic_revision",
+      "breakpoints": true
     }
   ]
 }

@@ -53,7 +53,7 @@ h=await run(db,"alice","topics_history",{id:n.id});assert.equal(h.versions.lengt
 const tail=await run(db,"alice","topics_history",{id:n.id,beforeRevision:7});assert.deepEqual(tail.versions.map(x=>x.revision),[6,5,4,3,2,1]);
 const exp=await run(db,"alice","topics_export");assert.equal(exp.topics.length,2);assert.equal(exp.history.length,60);assert.equal(exp.selected.id,"legacy");assert.equal(exp.history.some(x=>x.owner),false);
 await assert.rejects(run(db,"","topics_export"),/вход/);
-assert.throws(()=>validate({title:""}));assert.throws(()=>validate({status:"bad"}));assert.throws(()=>validate({summary:"x".repeat(4001)}));assert.equal(tools.length,27);
+assert.throws(()=>validate({title:""}));assert.throws(()=>validate({status:"bad"}));assert.throws(()=>validate({summary:"x".repeat(4001)}));assert.ok(tools.some(t=>t.name==="topics_scope_confirm" && !t.annotations.readOnlyHint));assert.ok(tools.some(t=>t.name==="topics_view_owned" && t.annotations.readOnlyHint));
 
 const meta=(await run(db,"alice","topics_create",{title:"МЕТАДАННЫЕ",tags:["3D","Дизайн"],groupName:"Студия",pinned:true,sources:[{label:"Документ",url:"https://example.com/doc"}]})).topic;
 assert.deepEqual((await run(db,"alice","topics_get",{id:meta.id})).topic.tags,["3D","Дизайн"]);

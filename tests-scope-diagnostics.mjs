@@ -7,12 +7,12 @@ const {handleTopics}=await import('data:text/javascript;base64,'+Buffer.from(js)
 async function call({meta,args={},owner='alice',api=false,extra={}}={}){
  const params={name:'topics_scope_diagnostics',arguments:args,...(meta===undefined?{}:{_meta:meta})};
  const b=api?{...params,...extra}:{jsonrpc:'2.0',id:1,method:'tools/call',params,...extra};
- const r=await handleTopics(new Request('https://example.test/'+(api?'api/topics':'mcp'),{method:'POST',headers:owner?{'oai-authenticated-user-id':owner}:{},body:JSON.stringify(b)}),{get DB(){throw Error('DB touched')}});
+ const r=await handleTopics(new Request('https://example.test/'+(api?'api/topics':'mcp'),{method:'POST',headers:owner?{'oai-authenticated-user-id':owner}:{},body:JSON.stringify(b)}),{get DB(){throw Error('Legacy DB touched')},get CHAT_DB(){throw Error('Chat DB touched')}});
  return {status:r.status,body:await r.json()};
 }
 const data=r=>r.body.result.structuredContent;
 const valid=data(await call({meta:{'openai/session':'session-abc'}}));
-assert.equal(valid.status,'valid_format');assert.match(valid.fingerprint,/^[a-f0-9]{64}$/);assert.equal(valid.isolated,false);assert.equal(valid.catalogRouting,'account');
+assert.equal(valid.status,'valid_format');assert.match(valid.fingerprint,/^[a-f0-9]{64}$/);assert.equal(valid.catalogRouting,'confirmed_chat');
 assert.equal(JSON.stringify(valid).includes('session-abc'),false);assert.equal(JSON.stringify(valid).includes('alice'),false);
 assert.equal(data(await call({meta:{'openai/session':'session-abc'}})).fingerprint,valid.fingerprint);
 assert.notEqual(data(await call({owner:'bob',meta:{'openai/session':'session-abc'}})).fingerprint,valid.fingerprint);
