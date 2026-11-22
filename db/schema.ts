@@ -1,6 +1,6 @@
 import { integer, sqliteTable, text, primaryKey, index } from "drizzle-orm/sqlite-core";
 export const topics = sqliteTable("topics", {
-  owner: text("owner").notNull(), id: text("id").notNull(), parentId:text("parent_id"),
+  owner: text("owner").notNull(), id: text("id").notNull(), parentId:text("parent_id"), autoRevision: integer("auto_revision"),
   title: text("title").notNull(), summary: text("summary").notNull().default(""),
   decisions: text("decisions").notNull().default(""), nextStep: text("next_step").notNull().default(""),
   status: text("status").notNull().default("active"), updatedAt: text("updated_at").notNull(),
@@ -22,3 +22,8 @@ export const topicActivity=sqliteTable("topic_activity",{owner:text("owner").not
 export const topicMerges=sqliteTable("topic_merges",{owner:text("owner").notNull(),id:text("id").notNull(),digest:text("digest").notNull(),payload:text("payload").notNull(),state:text("state").notNull(),createdAt:text("created_at").notNull(),undoneAt:text("undone_at")},t=>[primaryKey({columns:[t.owner,t.id]})]);
 
 export const topicEnrichments=sqliteTable("topic_enrichments",{owner:text("owner").notNull(),id:text("id").notNull(),topicId:text("topic_id").notNull(),requestDigest:text("request_digest").notNull(),previewDigest:text("preview_digest").notNull(),payload:text("payload").notNull(),state:text("state").notNull(),createdAt:text("created_at").notNull()},t=>[primaryKey({columns:[t.owner,t.id]})]);
+
+export const chatScopes = sqliteTable("chat_scopes", {
+  owner: text("owner").notNull(),
+  fingerprint: text("fingerprint").notNull().unique(),
+}, t => [primaryKey({columns: [t.owner, t.fingerprint]})]);

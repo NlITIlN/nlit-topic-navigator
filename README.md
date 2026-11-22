@@ -1,6 +1,25 @@
-# Nlit Topic Navigator
-Source-only snapshot of Topic Navigator 1.8.1. Includes a web UI, MCP server, database schema and migrations, and test scripts. No production binding, credentials, or user data are supplied. The local development build requires Node.js 22.13+ and a local Cloudflare D1 binding named DB. Install the locked dependencies, then use npm run dev. Build and runtime compatibility of this snapshot have not been verified. This repository alone does not install the app into ChatGPT.
+# Навигатор тем
 
-## Deployment boundary
+<img src="public/topic-navigator.png" alt="Компас Навигатора тем" width="80" height="80">
 
-This snapshot is for source review and local development only. Do not expose its development server to the internet or deploy it as a standalone authenticated service. The original application depends on a trusted identity gateway; local mock identity is not a public authentication mechanism. Configure and review a production authentication boundary before any standalone deployment. Do not connect this development copy to production data.
+Навигатор собирает дерево тем текущей беседы в ChatGPT. Выберите тему, чтобы увидеть, что уже сделано, какие решения приняты и с какого шага продолжить. Ассистент пополняет карточки краткими выжимками. У каждой подтверждённой беседы свой каталог и свой выбор.
+
+## Состояние проекта
+
+Основа этой ветки соответствует приватной версии v2. В репозиторий также добавлены новое название и значок для следующей сборки. Владелец проверил в обычном ChatGPT рост дерева, продолжение по выбранной теме и одну беседу на ПК и iPhone. Журнал объединений проверен на тестовых данных. Его проверка в клиенте остаётся открытой.
+
+В Dot работают сохранение и повторное обновление тем при вызове через ассистента. Встроенная панель и пополнение после обычной реплики требуют отдельной проверки после редизайна. Подробнее в [протоколе проверок](chat-scope/conversation-topics.md).
+
+## Локальная проверка
+
+Требуется Node.js 22.13 или новее. Из корня репозитория выполните
+
+```sh
+npm ci
+node tests-chat-scope.mjs
+node tests-auto-topics-d1.mjs
+```
+
+Первый тест проверяет HTTP-обработчик и панель с SQLite в памяти. Второй применяет миграции `drizzle/0000…0010` к временной локальной D1. Для локальной сборки скопируйте `.openai/hosting.example.json` в `.openai/hosting.json` и запустите `npm run build`. Пример содержит пустой объект для проверки сборки.
+
+Для запросов к темам нужны доверенный шлюз ChatGPT и отдельная привязка `CHAT_DB`. Подстановка личности используется только в тестовых фикстурах. Порядок привязки и возврата к исходной версии описан в [документации каталога](chat-scope/README.md).

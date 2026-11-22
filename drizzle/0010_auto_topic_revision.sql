@@ -1,0 +1,1 @@
+ALTER TABLE `topics` ADD `auto_revision` integer;

@@ -18,7 +18,16 @@ for(const mode of ['legacy','modern']){
 // Compatibility: the repair does not introduce stricter inbound rejection
 // before the actual Sites wrapper's wire behavior has been verified.
 assert.equal((await request('ping',{}, {'MCP-Protocol-Version':'2026-07-28'})).status,200);
-assert.equal((await request('initialize')).body.result.protocolVersion,'2025-11-25');
+const initialized=(await request('initialize')).body.result;
+assert.equal(initialized.protocolVersion,'2025-11-25');
+assert.equal(initialized.serverInfo.name,'nlit-topic-navigator');
+assert.equal(initialized.serverInfo.title,'Навигатор тем');
+const [icon]=initialized.serverInfo.icons;
+assert.equal(icon.src,'https://example.test/topic-navigator.png');
+assert.equal(icon.mimeType,'image/png');
+const png=readFileSync('public/topic-navigator.png');
+assert.equal(png.subarray(1,4).toString(),'PNG');
+assert.deepEqual(icon.sizes,[png.readUInt32BE(16)+'x'+png.readUInt32BE(20)]);
 // Test the real transport, not the previous suite's RPC replacement.
 const html=readFileSync('lib/view.html','utf8'), script=html.match(/<script>([\s\S]*)<\/script>/)[1];
 const transport=script.slice(script.indexOf('function rpc('),script.indexOf('function styleHost'));

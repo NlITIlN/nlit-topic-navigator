@@ -5,10 +5,7 @@ import { configureToolEnvironment } from "./scripts/tool-environment.mjs";
 import { sites } from "./scripts/vite/sites-vite-plugin";
 import { connectorPreview } from "./scripts/vite/connector-preview-plugin.mjs";
 
-const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
-  "00000000-0000-4000-8000-000000000000";
-
-const d1: string = "DB";
+const d1: string = "CHAT_DB";
 const r2: string | null = null;
 
 // macOS Seatbelt blocks FSEvents, so Codex previews need polling for HMR.
@@ -22,8 +19,8 @@ const localBindingConfig = {
     ? [
         {
           binding: d1,
-          database_name: "site-creator-d1",
-          database_id: SITE_CREATOR_PLACEHOLDER_DATABASE_ID,
+          database_name: "nlit-chat-topics-local",
+          database_id: "00000000-0000-4000-8000-000000000002",
         },
       ]
     : [],
@@ -54,7 +51,7 @@ export default defineConfig(async ({ command }) => {
     },
     plugins: [
       vinext(),
-      sites({ mockAuth: !managedLinux }),
+      sites({ mockAuth: false }),
       connectorPreview(),
       cloudflare({
         viteEnvironment: { name: "rsc", childEnvironments: ["ssr"] },

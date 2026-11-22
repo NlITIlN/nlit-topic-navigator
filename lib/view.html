@@ -1,13 +1,13 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Навигатор тем Nlit</title><style>
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Навигатор тем</title><link rel="icon" type="image/png" href="/topic-navigator.png"><style>
 :root{color-scheme:light dark;--bg:#f5f6f8;--card:#fff;--text:#182331;--muted:#536373;--line:#d8e0e8;--accent:#1659d5}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,sans-serif;padding:20px; padding-bottom:max(24px,env(safe-area-inset-bottom))}main{max-width:1100px;margin:auto}header{display:flex;justify-content:space-between;align-items:center;gap:12px}h1{font-size:25px;margin:6px 0}h2{font-size:18px;margin:0;overflow-wrap:anywhere}p{margin:8px 0}small,.muted{color:var(--muted)}button,input,select,textarea{font:inherit;border:1px solid var(--line);border-radius:10px;padding:10px;color:inherit;background:var(--card)}button{cursor:pointer;min-height:44px}button:hover{border-color:var(--accent)}button:disabled{opacity:.6;cursor:wait}button.primary{background:var(--accent);color:white;border-color:var(--accent)}:focus-visible{outline:3px solid #5c9eff;outline-offset:2px}.toolbar{display:flex;gap:10px;margin:24px 0 14px;flex-wrap:wrap}.toolbar input{flex:1;min-width:140px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:14px}.card{padding:20px;background:var(--card);border:1px solid var(--line);border-radius:18px}.card p{white-space:pre-wrap;overflow-wrap:anywhere}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.badge{font-size:12px;display:inline-block;padding:3px 8px;background:var(--bg);border-radius:20px;margin-bottom:10px}.next{border-left:3px solid var(--accent);padding-left:12px;margin-top:14px}label{display:block;margin:12px 0}label input,label textarea,label select{display:block;width:100%;margin-top:5px}textarea{min-height:90px;resize:vertical}dialog{width:min(620px,calc(100% - 24px));max-height:90vh;border:1px solid var(--line);border-radius:20px;background:var(--card);color:var(--text);padding:24px}dialog::backdrop{background:#0007}.empty{text-align:center;padding:48px 20px;border:1px dashed var(--line);border-radius:18px}.status{min-height:24px;margin:12px 0;color:var(--muted)}footer{margin:26px 0;font-size:13px;color:var(--muted)}@media(max-width:450px){body{padding:14px}header{align-items:flex-start}h1{font-size:22px}.toolbar select{flex:1}.card{padding:16px}}@media(prefers-color-scheme:dark){:root{--bg:#10171f;--card:#19232f;--text:#edf3fa;--muted:#a5b5c7;--line:#334355;--accent:#3278ea}}
-</style></head><body><main><header><div><small>NLIT / КОНТЕКСТ ПОД РУКОЙ</small><h1>Навигатор тем</h1><p class="muted">Вернуться к мысли, а не начинать заново.</p></div><button class="primary" id="add">+ Тема</button></header><div class="toolbar"><input id="search" aria-label="Поиск тем" placeholder="Название, решение или следующий шаг"><select id="filter" aria-label="Статус"><option value="">Все темы</option><option value="active">В работе</option><option value="paused">На паузе</option><option value="archived">Архив</option></select><select id="groupfilter" aria-label="Группа"><option value="">Все группы</option></select><select id="tagfilter" aria-label="Тег"><option value="">Все теги</option></select><select id="sort" aria-label="Сортировка"><option value="updated">Закреплённые и обновлённые</option><option value="recent">Недавно выбранные</option></select><label style="display:flex;align-items:center;gap:8px;margin:0"><input type="checkbox" id="pinnedfilter" style="width:auto"> Только закреплённые</label><button id="refresh">Обновить</button><button id="export">Экспорт</button><button id="import">Импорт</button><button id="merge">Объединить темы</button><button id="mergelog">Журнал объединений</button></div><details class="card" id="compat"><summary>Подключение и область выбора · фаза 4</summary><p id="compattext"></p><p>Общий выбор хранится в аккаунте. Контекст беседы закрепляется отдельно в экземпляре панели, если это поддерживает клиент. Это не доступ ко всей переписке.</p></details><details class="card" id="tree"><summary>Дерево тем и подтем</summary><p>Все статусы, включая архивные ветви. Поиск и фильтры относятся только к плоскому списку. Архивирование родителя не архивирует детей.</p><button id="treerefresh">Обновить дерево</button><div id="treeitems"></div></details><section id="threadcontext" class="card" hidden></section><section id="selected" class="card" aria-label="Выбранная тема" hidden></section><div id="status" class="status" role="status" aria-live="polite">Подключаюсь…</div><section class="grid" id="list"></section><nav class="actions" aria-label="Страницы"><button id="prev">Назад</button><span id="pageinfo"></span><button id="next">Далее</button></nav><footer><p>Привязки чатов и проектов сохраняются отдельно от обычных источников. Для добавления или изменения попроси Nlit показать план по конкретной теме. Это не даёт доступа к переписке или проекту и не включает синхронизацию.</p><p>Пополнение по диалогу: попроси Nlit предложить теги и итог для конкретной темы. Ассистент использует только видимый текущий разговор и отдельно показывает факты, идеи и решения. Сначала просмотр, затем твоё явное подтверждение. Сам плагин не читает чаты и не запускает модель; фоновое пополнение не включено.</p>Темы обновляешь ты через «Изменить» или Nlit по твоей команде «Зафиксируй итог в теме». Автоматического чтения чатов и фонового обновления нет. Записи и выбранная тема хранятся в приватной базе и доступны с телефона и ПК. После изменений в другом окне нажми «Обновить». Выбор темы не отправляет сообщений и не запускает задачи.</footer></main>
+</style></head><body><main><header><div><small>NLIT / КОНТЕКСТ ПОД РУКОЙ</small><h1>Навигатор тем</h1><p class="muted">Вернуться к мысли, а не начинать заново.</p></div></header><div id="status" class="status" role="status" aria-live="polite">Подключаюсь…</div><section id="selected" class="card" aria-label="Выбранная тема" hidden></section><details class="card" id="tree" open><summary>Дерево тем и подтем</summary><p>Раскрой ветку, чтобы увидеть подтемы, или выбери тему для продолжения.</p><button id="treerefresh">Обновить дерево</button><div id="treeitems"></div></details><details id="management"><summary>Поиск и управление темами</summary><section id="threadcontext" class="card" hidden></section><button class="primary" id="add" disabled>+ Тема</button><div class="toolbar"><input id="search" aria-label="Поиск тем" placeholder="Название, решение или следующий шаг"><select id="filter" aria-label="Статус"><option value="">Все темы</option><option value="active">В работе</option><option value="paused">На паузе</option><option value="archived">Архив</option></select><select id="groupfilter" aria-label="Группа"><option value="">Все группы</option></select><select id="tagfilter" aria-label="Тег"><option value="">Все теги</option></select><select id="sort" aria-label="Сортировка"><option value="updated">Закреплённые и обновлённые</option><option value="recent">Недавно выбранные</option></select><label style="display:flex;align-items:center;gap:8px;margin:0"><input type="checkbox" id="pinnedfilter" style="width:auto"> Только закреплённые</label><button id="refresh">Обновить</button></div><details><summary>Резервная копия каталога</summary><button id="export">Экспорт</button><button id="import">Импорт</button></details><details><summary>Объединение тем</summary><button id="merge">Объединить темы</button><button id="mergelog">Журнал объединений</button></details><section class="grid" id="list"></section><nav class="actions" aria-label="Страницы"><button id="prev">Назад</button><span id="pageinfo"></span><button id="next">Далее</button></nav><details class="card" id="compat"><summary>Подключение и область выбора</summary><p id="compattext"></p><button id="checkpanelscope">Проверить контекст панели</button><p id="panelscope" role="status"></p><p>Выбор хранится в подтверждённой области чата. Для просмотра своей темы из другого чата попроси Nlit открыть её по точному ID. Контекст беседы закрепляется отдельно в экземпляре панели, если это поддерживает клиент. Это не доступ ко всей переписке.</p></details></details></main>
 <dialog id="editor"><form id="form"><h2 id="formtitle">Новая тема</h2><label>Название<input name="title" maxlength="120" required></label><label>Краткий контекст<textarea name="summary" maxlength="4000"></textarea></label><label>Что решили<textarea name="decisions" maxlength="6000"></textarea></label><label>Следующий шаг<textarea name="nextStep" maxlength="2000"></textarea></label><label>Статус<select name="status"><option value="active">В работе</option><option value="paused">На паузе</option><option value="archived">Архив</option></select></label><label>Родительская тема<select name="parentId" id="parentchoice"><option value="">Корень (без родителя)</option></select></label><p id="parentnotice" class="muted"></p><label>Группа<input name="groupName" maxlength="80" placeholder="Например, Разработка"></label><label>Теги через запятую<input name="tags" placeholder="До 10 тегов, по 40 символов, без запятых в теге"></label><label style="display:flex;gap:8px;align-items:center"><input name="pinned" type="checkbox" style="width:auto"> Закрепить тему</label><label>Источники: по одной строке «Название | https://…»<textarea name="sources" placeholder="Документ | https://example.com/page"></textarea></label><small>Только HTTPS, до 10 ссылок. Без | и переносов внутри названия, без пробелов в URL. Ссылки сохраняются, но их содержимое не читается автоматически.</small><p id="formerror" role="alert"></p><div class="actions"><button type="submit" class="primary">Сохранить</button><button type="button" id="cancel">Отмена</button></div></form></dialog>
 <dialog id="context"><h2>Сводка темы</h2><p class="muted">Для продолжения без копирования сначала выбери тему в списке, затем напиши Nlit «Продолжим выбранную». Ниже можно отдельно скопировать сводку.</p><label>Текст для разговора<textarea id="contexttext" readonly style="min-height:220px"></textarea></label><div class="actions"><button id="draft" hidden>Вставить черновик</button><button id="attach" hidden>Контекст этой беседы</button><button id="send" class="primary" hidden>Отправить в текущий разговор</button><button id="copy">Копировать</button><button id="contextclose">Закрыть</button></div><p id="contextstatus" role="status"></p></dialog>
 <dialog id="history"><h2 id="historytitle">История темы</h2><p id="historynotice" class="muted"></p><label>Версия<select id="version"></select></label><div id="diff"></div><p id="historystatus" role="status"></p><div class="actions"><button id="restore" class="primary">Восстановить эту версию</button><button id="historymore">Более ранние</button><button id="historyclose">Закрыть</button></div></dialog>
 <dialog id="exportdialog"><h2>Экспорт тем</h2><p>Файл содержит личные заметки и историю. Сохрани его у себя; не публикуй случайно. Импорт добавляет только отсутствующие темы и не заменяет существующие.</p><p id="exportinfo"></p><div class="actions"><a id="download" download="nlit-topics.json">Скачать JSON</a><button id="exportcopy">Копировать JSON</button><button id="exportclose">Закрыть</button></div><label>Если скачивание недоступно, скопируй текст<textarea id="exporttext" readonly></textarea></label><p id="exportstatus" role="status"></p></dialog>
 <dialog id="importdialog"><h2>Импорт резервной копии</h2><p>Добавятся только темы с отсутствующими ID и их история. Существующие темы и выбор не меняются. Одинаковые названия с разными ID считаются разными темами.</p><label>JSON-файл экспорта (до 100 КБ)<input id="importfile" type="file" accept=".json,application/json"></label><label>Или вставь JSON<textarea id="importtext" spellcheck="false"></textarea></label><div class="actions"><button id="importpreview">Проверить файл</button><button id="importcommit" class="primary" disabled>Подтвердить добавление</button><button id="importclose">Отмена</button></div><p id="importstatus" role="status" aria-live="polite"></p><pre id="importplan" style="white-space:pre-wrap;overflow-wrap:anywhere"></pre></dialog>
-<dialog id="mergedialog"><h2>Объединение двух тем</h2><p>Ничего не удаляем. Главная получает заметки, теги и ссылки; вторая уходит в архив с сохранением полей и истории. Общий выбор не меняется.</p><label>Главная тема<select id="mergeprimary"></select></label><label>Вторая тема<select id="mergesecondary"></select></label><button id="mergepreview">Показать план</button><button id="mergeconfirm" disabled>Подтвердить объединение</button><button id="mergeclose">Отмена</button><p id="mergestatus" role="status"></p><pre id="mergeplan" style="white-space:pre-wrap;overflow-wrap:anywhere"></pre></dialog>
-<dialog id="mergelogdialog"><h2>Журнал объединений</h2><p>Отмена восстановит поля обеих тем новыми версиями. Если хотя бы одну тему изменили позже, отмена блокируется.</p><select id="mergeoperation" aria-label="Операция объединения"></select><button id="mergelogmore">Следующие операции</button><button id="mergeundopreview">Показать отмену</button><button id="mergeundoconfirm" disabled>Подтвердить отмену</button><button id="mergelogclose">Закрыть</button><p id="mergeundostatus" role="status"></p><pre id="mergeundoplan" style="white-space:pre-wrap;overflow-wrap:anywhere"></pre></dialog>
+<dialog id="mergedialog"><h2>Объединение двух тем</h2><p>Ничего не удаляем. Главная получает заметки, теги и ссылки; вторая уходит в архив с сохранением полей и истории. Выбор в чате сохраняется.</p><label>Главная тема<select id="mergeprimary"></select></label><label>Вторая тема<select id="mergesecondary"></select></label><button id="mergepreview">Показать план</button><button id="mergeconfirm" disabled>Подтвердить объединение</button><button id="mergeclose">Отмена</button><p id="mergestatus" role="status"></p><pre id="mergeplan" style="white-space:pre-wrap;overflow-wrap:anywhere"></pre></dialog>
+<dialog id="mergelogdialog"><h2>Журнал объединений</h2><p id="undonotice" hidden>Отмена восстановит поля обеих тем новыми версиями. Если хотя бы одну тему изменили позже, отмена блокируется.</p><select id="mergeoperation" hidden disabled aria-label="Операция объединения"></select><button id="mergelogmore" hidden disabled>Следующие операции</button><button id="mergeundopreview" hidden disabled>Показать отмену</button><button id="mergeundoconfirm" hidden disabled>Подтвердить отмену</button><button id="mergelogclose">Закрыть</button><p id="mergeundostatus" role="status"></p><pre id="mergeundoplan" style="white-space:pre-wrap;overflow-wrap:anywhere"></pre></dialog>
 <script>
 const $=id=>document.getElementById(id), labels={active:"В работе",paused:"На паузе",archived:"Архив"};
 let conversationTopic=null,contextTopic=null,contextEpoch=0,contextBusy=false,hostName="Веб-страница",hostVersion="";
@@ -26,6 +26,17 @@ window.addEventListener("message",e=>{
     :{jsonrpc:"2.0",id:m.id,error:{code:-32601,message:"Method not found"}};
    parent.postMessage(response,hostOrigin||e.origin||"*");
   }else if(m.method==="ui/notifications/host-context-changed")applyHost(m.params);
+  else if(m.method==="ui/notifications/tool-result"){
+    const scope=m.params?.structuredContent?.panelScopeFingerprint;
+    if(!openingFingerprint&&typeof scope==="string"&&/^[a-f0-9]{64}$/.test(scope)){
+      openingFingerprint=scope;
+      if((catalogFingerprint&&catalogFingerprint!==scope)||(journalScope&&journalScope!==scope)){
+        clearCatalog();clearJournal();
+        $("mergeundostatus").textContent="Контекст панели изменился. Открой журнал из исходного чата.";
+      }
+    }
+    if(embedded&&ready)refresh(true);
+  }
   return;
  }
  if(has("method")||!has("id")||has("result")===has("error")||!pending.has(m.id))return;
@@ -36,20 +47,100 @@ window.addEventListener("message",e=>{
 });
 function styleHost(c){if(c?.styles?.variables)for(const [k,v] of Object.entries(c.styles.variables))if(k.startsWith("--")&&typeof v==="string")document.documentElement.style.setProperty(k,v);const s=c?.safeAreaInsets;if(s)for(const side of ["top","bottom","left","right"])if(Number.isFinite(s[side]))document.body.style["padding"+side[0].toUpperCase()+side.slice(1)]=Math.max(14,s[side])+"px"}
 function feature(name){return caps.experimental?.[name]!==undefined||caps.extensions?.[name]!==undefined}
-function supportsContext(){return embedded&&!!caps.updateModelContext?.structuredContent}
+function supportsContext(){return embedded&&!!(caps.updateModelContext?.structuredContent||caps.updateModelContext?.text)}
 function diagnostics(){
- $("compattext").textContent=hostName+(hostVersion?" · "+hostVersion:"")+". "+(embedded?"Встроенная панель. ":"Самостоятельная веб-версия. ")+"Контекст беседы: "+(supportsContext()?"доступен":"не поддерживается клиентом")+". Черновик: "+(embedded&&caps.message?.text&&feature("openai/message")?"доступен":"недоступен")+". Отправка: "+(embedded&&caps.message?.text?"доступна по кнопке":"недоступна")+". Надёжный ID беседы не предоставлен; отдельной серверной привязки к беседе нет.";
+ $("compattext").textContent=hostName+(hostVersion?" · "+hostVersion:"")+". "+(embedded?"Встроенная панель. ":"Самостоятельная веб-версия. ")+"Контекст беседы: "+(supportsContext()?"доступен":"не поддерживается клиентом")+". Черновик: "+(embedded&&caps.message?.text&&feature("openai/message")?"доступен":"недоступен")+". Отправка: "+(embedded&&caps.message?.text?"доступна по кнопке":"недоступна")+". Для доступа к каталогу требуется подтверждённый контекст запроса MCP.";
 }
-function applyHost(c){styleHost(c);if(c&&Object.prototype.hasOwnProperty.call(c,"openai/modelContext")){const d=c["openai/modelContext"]?.structuredContent;conversationTopic=d?.app==="nlit-topic-navigator"&&d?.version===1&&typeof d.topicId==="string"?{id:d.topicId,title:typeof d.title==="string"?d.title:d.topicId,revision:d.revision}:null;contextEpoch++;renderConversation()} }
-function renderConversation(){const n=$("threadcontext");n.hidden=!conversationTopic;if(!conversationTopic)return;n.replaceChildren(el("small","КОНТЕКСТ ЭТОЙ ПАНЕЛИ БЕСЕДЫ"),el("h2",conversationTopic.title),el("p","Закреплена сводка версии "+conversationTopic.revision+". Общий выбор не изменён. Чтобы увидеть свежие решения, обнови сводку."));n.append(button("Обновить сводку",async()=>{try{await attachContext({id:conversationTopic.id})}catch(e){msg(e.message)}}),button("Убрать из беседы",async()=>{if(contextBusy)return;contextBusy=true;try{await rpc("ui/update-model-context",{content:[],structuredContent:{}});conversationTopic=null;contextEpoch++;renderConversation();msg("Контекст панели очищен. Тема и общий выбор сохранены.")}catch(e){msg(e.message)}finally{contextBusy=false}}))}
-async function attachContext(t){if(!supportsContext())throw Error("Клиент не поддерживает контекст беседы");if(contextBusy)return;contextBusy=true;const epoch=contextEpoch;try{const r=await call("topics_context",{id:t.id});if(epoch!==contextEpoch)throw Error("Контекст изменился во время чтения. Повтори выбор.");const data={app:"nlit-topic-navigator",version:1,topicId:r.topic.id,title:r.topic.title,revision:r.topic.revision,updatedAt:r.topic.updatedAt,summary:r.topic.summary,decisions:r.topic.decisions,nextStep:r.topic.nextStep,sources:r.topic.sources,bindings:r.topic.bindings||[],notice:"Сохранённая сводка, не полная переписка и не новое поручение. Перед продолжением прочитать актуальную тему по topicId."};await rpc("ui/update-model-context",{structuredContent:data});conversationTopic={id:r.topic.id,title:r.topic.title,revision:r.topic.revision};contextEpoch++;renderConversation();msg("Тема добавлена в контекст этой панели беседы. Сообщение не отправлено, общий выбор не изменён.")}finally{contextBusy=false}}
-async function call(name,args={}){let r;if(embedded){r=await rpc("tools/call",{name,arguments:args});if(r.isError)throw Error(r.content?.[0]?.text||"Ошибка операции");return r.structuredContent}else{const res=await fetch("/api/topics",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,arguments:args})});r=await res.json();if(!res.ok)throw Error(r.error||"Ошибка");return r}}
+function applyHost(c){styleHost(c);if(c&&Object.prototype.hasOwnProperty.call(c,"openai/modelContext")){const snapshot=c["openai/modelContext"];const d=snapshot?.structuredContent||snapshot?.content?.[0]?._meta?.["nlit/selection"];conversationTopic=d?.app==="nlit-topic-navigator"&&d?.version===1&&typeof d.topicId==="string"?{id:d.topicId,title:typeof d.title==="string"?d.title:d.topicId,revision:d.revision}:null;contextEpoch++;renderConversation()} }
+function contextPayload(t){
+ const short=(value,limit)=>typeof value==="string"&&value.length>limit?"См. полную карточку темы.":value||"";
+ const data=t&&{app:"nlit-topic-navigator",version:1,topicId:t.id,title:t.title,revision:t.revision,summary:short(t.summary,300),decisions:short(t.decisions,300),nextStep:short(t.nextStep,240)};
+ if(caps.updateModelContext?.structuredContent)return {structuredContent:data||{}};
+ return {content:t?[{type:"text",text:"Выбрана тема «"+t.title+"».\nСделано / контекст: "+data.summary+"\nРешения: "+data.decisions+"\nСледующий шаг: "+data.nextStep,
+   _meta:{"nlit/selection":{app:data.app,version:1,topicId:t.id,title:t.title,revision:t.revision}}}]:[]};
+}
+async function clearAttachment(){
+ await rpc("ui/update-model-context",contextPayload(null));
+ conversationTopic=null;contextEpoch++;renderConversation();
+}
+function renderConversation(){const n=$("threadcontext");n.hidden=!conversationTopic;if(!conversationTopic)return;n.replaceChildren(el("small","КОНТЕКСТ ЭТОЙ ПАНЕЛИ БЕСЕДЫ"),el("h2",conversationTopic.title),el("p","Закреплена сводка версии "+conversationTopic.revision+". Выбор в чате сохранён. Чтобы увидеть свежие решения, обнови сводку."));n.append(button("Обновить сводку",async()=>{try{await attachContext({id:conversationTopic.id})}catch(e){msg(e.message)}}),button("Убрать из беседы",async()=>{if(contextBusy)return;contextBusy=true;try{await clearAttachment();msg("Контекст панели очищен. Тема и выбор в чате сохранены.")}catch(e){msg(e.message)}finally{contextBusy=false}}))}
+async function attachContext(t,loaded=false){
+ if(!supportsContext())throw Error("Клиент не поддерживает контекст беседы");
+ if(contextBusy)throw Error("Контекст панели обновляется.");
+ contextBusy=true;const epoch=contextEpoch;
+ try{
+   const topic=loaded?t:(await call("topics_context",{id:t.id})).topic;
+   if(epoch!==contextEpoch)throw Error("Контекст изменился во время чтения. Повтори выбор.");
+   await rpc("ui/update-model-context",contextPayload(topic));
+   conversationTopic={id:topic.id,title:topic.title,revision:topic.revision};contextEpoch++;renderConversation();
+   msg("Сводка добавлена в контекст панели.");
+ }finally{contextBusy=false}
+}
+function toolError(message,scopeIssue){return Object.assign(Error(message),{scopeIssue})}
+async function call(name,args={}){
+ if(embedded){
+   const r=await rpc("tools/call",{name,arguments:args});
+   if(r.isError)throw toolError(r.content?.[0]?.text||"Ошибка операции",r._meta?.["nlit/scopeIssue"]);
+   if(openingFingerprint&&(name==="topics_list"||name==="topics_selected")&&r.structuredContent?.scopeFingerprint!==openingFingerprint)
+     throw toolError("Контекст панели отличается от запроса открытия. Открой Навигатор заново из этого чата.","changed");
+   return r.structuredContent;
+ }
+ const response=await fetch("/api/topics",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,arguments:args})});
+ const r=await response.json();
+ if(!response.ok)throw toolError(r.error||"Ошибка",r.scopeIssue);
+ return r;
+}
+$("checkpanelscope").onclick=async()=>{
+ const button=$("checkpanelscope"), result=$("panelscope");
+ button.disabled=true;result.textContent="Проверяю запрос панели…";
+ try{
+   const probe=await call("topics_scope_diagnostics");
+   result.textContent=probe.validFormat&&/^[a-f0-9]{64}$/.test(probe.fingerprint)
+     ?"Отпечаток запроса панели: "+probe.fingerprint+". "+(openingFingerprint
+       ?(openingFingerprint===probe.fingerprint?"Совпадает с запросом открытия панели.":"Отличается от запроса открытия. Открой Навигатор заново из этой беседы.")
+       :"Сравни его с отпечатком диагностики в этой беседе.")
+     :"Панель не получила контекст беседы. Открой её заново из этого чата.";
+ }catch{result.textContent="Не удалось проверить контекст панели. Повтори проверку."}
+ finally{button.disabled=false}
+};
 function msg(s){$("status").textContent=s}
-async function refresh(){const token=++loadToken;try{msg("Загружаю темы…");const args={limit:30,offset,sort:$("sort").value};if($("search").value)args.query=$("search").value;if($("filter").value)args.status=$("filter").value;if($("groupfilter").value)args.groupName=$("groupfilter").value;if($("tagfilter").value)args.tag=$("tagfilter").value;if($("pinnedfilter").checked)args.pinned=true;const [r,sel]=await Promise.all([call("topics_list",args),call("topics_selected")]);if(token!==loadToken)return;all=r.topics;selected=r.selected;selectedTopic=sel.topic||null;total=r.total;nextOffset=r.nextOffset;if(offset>0&&offset>=total){offset=total?Math.floor((total-1)/30)*30:0;return refresh()}for(const [id,values,label] of [["groupfilter",r.groups||[],"Все группы"],["tagfilter",r.tags||[],"Все теги"]]){const keep=$(id).value;$(id).replaceChildren();const base=el("option",label);base.value="";$(id).append(base);for(const value of [...new Set([...values,...(keep?[keep]:[])])]){const o=el("option",value);o.value=value;$(id).append(o)}$(id).value=keep}render();if($("tree").open)refreshTree();$("pageinfo").textContent=total?((offset+1)+"–"+(offset+all.length)+" из "+total):"Нет результатов";$("prev").disabled=offset===0;$("next").disabled=nextOffset===null;msg("Найдено тем: "+total+" · поиск по всей базе")}catch(e){if(token===loadToken)msg(e.message)}}
+const emptyChat="В этом чате пока нет тем. Открой Навигатор через ассистента в этой беседе, чтобы он передал краткие темы из видимого обсуждения.";
+let lastCatalogSignature="";
+let catalogFingerprint=null;
+let openingFingerprint=null;
+async function refresh(quiet=false){const token=++loadToken;try{if(quiet!==true)msg("Загружаю темы…");const args={limit:30,offset,sort:$("sort").value};if($("search").value)args.query=$("search").value;if($("filter").value)args.status=$("filter").value;if($("groupfilter").value)args.groupName=$("groupfilter").value;if($("tagfilter").value)args.tag=$("tagfilter").value;if($("pinnedfilter").checked)args.pinned=true;const [r,sel]=await Promise.all([call("topics_list",args),call("topics_selected")]);if(token!==loadToken)return;if(r.scopeFingerprint!==sel.scopeFingerprint)throw Error("Контекст чата изменился. Обнови список.");catalogFingerprint=r.scopeFingerprint;$("add").disabled=false;const signature=JSON.stringify([r,sel]);if(quiet===true&&signature===lastCatalogSignature){if($("tree").open&&(r.nextOffset!==null||args.query||args.tag||args.groupName||args.status||args.pinned||offset))refreshTree();return;}lastCatalogSignature=signature;all=r.topics;selected=r.selected;selectedTopic=sel.topic||null;total=r.total;nextOffset=r.nextOffset;if(offset>0&&offset>=total){offset=total?Math.floor((total-1)/30)*30:0;return refresh()}for(const [id,values,label] of [["groupfilter",r.groups||[],"Все группы"],["tagfilter",r.tags||[],"Все теги"]]){const keep=$(id).value;$(id).replaceChildren();const base=el("option",label);base.value="";$(id).append(base);for(const value of [...new Set([...values,...(keep?[keep]:[])])]){const o=el("option",value);o.value=value;$(id).append(o)}$(id).value=keep}render();if($("tree").open)refreshTree();$("pageinfo").textContent=total?((offset+1)+"–"+(offset+all.length)+" из "+total):"Нет результатов";$("prev").disabled=offset===0;$("next").disabled=nextOffset===null;msg(!total && !args.query && !args.status && !args.groupName && !args.tag && !args.pinned ? emptyChat : "Найдено тем: "+total+" · поиск в этом чате")}catch(e){if(token===loadToken){clearCatalog();msg(e.message)}}}
 
+function clearCatalog(){
+ catalogFingerprint=null;lastCatalogSignature="";expandedBranches.clear();$("add").disabled=true;all=[];selected=null;selectedTopic=null;total=0;offset=0;nextOffset=null;++treeEpoch;
+ for(const id of ["list","selected","treeitems","pageinfo","groupfilter","tagfilter"])$(id).replaceChildren();
+ $("selected").hidden=true;$("prev").disabled=true;$("next").disabled=true;
+}
 function el(tag,text,cls){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n}
 function button(text,fn){const b=el("button",text);b.onclick=fn;return b}
-function render(){const st=selectedTopic;$("selected").hidden=!st;if(st){$("selected").replaceChildren(el("small","ОБЩАЯ ВЫБРАННАЯ ТЕМА АККАУНТА"),el("h2",st.title),el("p","Вернись к Nlit и напиши: «Продолжим выбранную». Копировать контекст не нужно."))}const ts=all;$("list").replaceChildren();if(!ts.length){$("list").append(el("div",($("search").value||$("filter").value||$("groupfilter").value||$("tagfilter").value||$("pinnedfilter").checked)?"Ничего не найдено. Измени поиск или фильтры.":"Здесь появятся твои темы. Добавь первую или попроси Nlit сохранить тему разговора.","empty"));return}for(const t of ts){const c=el("article",undefined,"card");c.append(el("span",labels[t.status],"badge"),el("h2",t.title));if(t.pinned)c.append(el("small","Закреплена"));if(t.groupName)c.append(el("p",t.groupName,"muted"));if(t.tags?.length)c.append(el("p",t.tags.map(x=>"#"+x).join(" "),"muted"));if(t.sources?.length){const d=el("details");d.append(el("summary","Источники · "+t.sources.length));for(const source of t.sources){const p=el("p"),link=el("a",source.label||source.url);link.href=source.url;link.target="_blank";link.rel="noopener noreferrer";p.append(link);d.append(p)}c.append(d)}if(t.bindings?.length){const d=el("details");d.append(el("summary","Чаты / проекты · "+t.bindings.length),el("p","Ссылки заданы явно. Доступ и содержимое не проверены; синхронизации нет.","muted"));for(const b of t.bindings){const p=el("p"),label=b.label+" · "+b.kind+" / "+b.provider;if(b.url){const a=el("a",label);a.href=b.url;a.target="_blank";a.rel="noopener noreferrer";p.append(a)}else p.append(el("span",label+" · ID: "+b.sourceId));d.append(p)}c.append(d)}if(t.summary)c.append(el("p",t.summary));if(t.decisions){const d=el("details");d.append(el("summary","Решения"),el("p",t.decisions));c.append(d)}if(t.nextStep)c.append(el("p","Дальше: "+t.nextStep,"next"));c.append(el("small","Обновлено "+new Date(t.updatedAt).toLocaleString("ru-RU")));const a=el("div",undefined,"actions");a.append(button(t.id===selected?.id?"Общая ✓":"Выбрать для аккаунта",async()=>{try{await call("topics_select",{id:t.id});await refresh();msg("Выбрано: "+t.title+". Вернись к Nlit и напиши «Продолжим выбранную».")}catch(e){msg(e.message)}}),button("Сводка / копирование",()=>showContext(t)),button("Изменить",()=>edit(t)),button("История",()=>showHistory(t.id)),button(t.pinned?"Открепить":"Закрепить",async()=>{try{await call("topics_update",{id:t.id,expectedRevision:t.revision,pinned:!t.pinned});await refresh()}catch(e){msg(e.message)}}),button(t.status==="archived"?"Вернуть":"В архив",async()=>{try{await call("topics_update",{id:t.id,expectedRevision:t.revision,status:t.status==="archived"?"active":"archived"});await refresh()}catch(e){msg(e.message)}}));if(supportsContext())a.prepend(button(conversationTopic?.id===t.id?"Обновить контекст беседы":"В эту беседу",async()=>{try{await attachContext(t)}catch(e){msg(e.message)}}));c.append(a);$("list").append(c)}}
+let choosingTopic=false;
+async function chooseTopic(t){
+ if(choosingTopic||contextBusy)return;
+ choosingTopic=true;
+ try {
+   const r=await call("topics_select",{id:t.id});
+   let message="Выбрана тема «"+r.topic.title+"». Продолжай в этом чате.";
+   if(supportsContext()){
+     try{await attachContext(r.topic,true)}catch{message="Тема выбрана. Контекст панели не обновился. При продолжении ассистент может прочитать сохранённый выбор."}
+   }
+   await refresh();msg(message);
+ }catch(e){msg(e.message)}finally{choosingTopic=false}
+}
+async function clearChoice(){
+ if(!selected||choosingTopic||contextBusy)return;
+ choosingTopic=true;
+ try{
+   await call("topics_clear_selection",{id:selected.id,selectedAt:selected.selectedAt});
+   let message="Выбор темы снят.";
+   if(supportsContext())try{await clearAttachment()}catch{message="Выбор снят. Клиент не подтвердил очистку сводки панели."}
+   await refresh();msg(message);
+ }catch(e){msg(e.message)}finally{choosingTopic=false}
+}
+function render(){const st=selectedTopic;$("selected").hidden=!st;if(st){$("selected").replaceChildren(el("small","ВЫБРАННАЯ ТЕМА ЧАТА"),el("h2",st.title),el("p","Сделано / контекст: "+(st.summary||"пока не зафиксировано")),el("p","Решения: "+(st.decisions||"пока не зафиксированы")),el("p","Следующий шаг: "+(st.nextStep||"пока не определён")),el("small","Продолжай разговор по этой теме."),button("Снять выбор",clearChoice))}const ts=all;$("list").replaceChildren();if(!ts.length){$("list").append(el("div",($("search").value||$("filter").value||$("groupfilter").value||$("tagfilter").value||$("pinnedfilter").checked)?"Ничего не найдено. Измени поиск или фильтры.":"В этом чате пока нет тем. Открой Навигатор через ассистента в этой беседе, чтобы он передал краткие темы из видимого обсуждения.","empty"));return}for(const t of ts){const c=el("article",undefined,"card");c.append(el("span",labels[t.status],"badge"),el("h2",t.title));if(t.pinned)c.append(el("small","Закреплена"));if(t.groupName)c.append(el("p",t.groupName,"muted"));if(t.tags?.length)c.append(el("p",t.tags.map(x=>"#"+x).join(" "),"muted"));if(t.sources?.length){const d=el("details");d.append(el("summary","Источники · "+t.sources.length));for(const source of t.sources){const p=el("p"),link=el("a",source.label||source.url);link.href=source.url;link.target="_blank";link.rel="noopener noreferrer";p.append(link);d.append(p)}c.append(d)}if(t.bindings?.length){const d=el("details");d.append(el("summary","Чаты / проекты · "+t.bindings.length),el("p","Ссылки заданы явно. Доступ и содержимое не проверены; синхронизации нет.","muted"));for(const b of t.bindings){const p=el("p"),label=b.label+" · "+b.kind+" / "+b.provider;if(b.url){const a=el("a",label);a.href=b.url;a.target="_blank";a.rel="noopener noreferrer";p.append(a)}else p.append(el("span",label+" · ID: "+b.sourceId));d.append(p)}c.append(d)}if(t.summary)c.append(el("p",t.summary));if(t.decisions){const d=el("details");d.append(el("summary","Решения"),el("p",t.decisions));c.append(d)}if(t.nextStep)c.append(el("p","Дальше: "+t.nextStep,"next"));c.append(el("small","Обновлено "+new Date(t.updatedAt).toLocaleString("ru-RU")));const a=el("div",undefined,"actions");a.append(button(t.id===selected?.id?"Выбрана ✓":"Выбрать для чата",()=>chooseTopic(t)),button("Сводка / копирование",()=>showContext(t)),button("Изменить",()=>edit(t)),button("История",()=>showHistory(t.id)),button(t.pinned?"Открепить":"Закрепить",async()=>{try{await call("topics_update",{id:t.id,expectedRevision:t.revision,pinned:!t.pinned});await refresh()}catch(e){msg(e.message)}}),button(t.status==="archived"?"Вернуть":"В архив",async()=>{try{await call("topics_update",{id:t.id,expectedRevision:t.revision,status:t.status==="archived"?"active":"archived"});await refresh()}catch(e){msg(e.message)}}));if(supportsContext())a.prepend(button(conversationTopic?.id===t.id?"Обновить контекст беседы":"В эту беседу",async()=>{try{await attachContext(t)}catch(e){msg(e.message)}}));c.append(a);$("list").append(c)}}
 
 const fieldLabels={bindings:"Привязки чатов и проектов",parentId:"Родительская тема",title:"Название",summary:"Контекст",decisions:"Решения",nextStep:"Следующий шаг",status:"Статус",tags:"Теги",groupName:"Группа",sources:"Источники",pinned:"Закрепление"};
 async function showHistory(id,before){
@@ -83,19 +174,102 @@ $("mergeprimary").onchange=resetMerge;$("mergesecondary").onchange=resetMerge;
 $("mergepreview").onclick=async()=>{if(mergeBusy)return;resetMerge();lockMerge(true);try{const args={primaryId:$("mergeprimary").value,secondaryId:$("mergesecondary").value};const p=await call("topics_merge_preview",args);mergePlan={...args,previewDigest:p.digest,operationId:crypto.randomUUID()};$("mergeplan").textContent=describeMerge(p);$("mergestatus").textContent=p.notice}catch(e){$("mergestatus").textContent=e.message}finally{lockMerge(false)}};
 $("mergeconfirm").onclick=async()=>{if(mergeBusy||!mergePlan)return;lockMerge(true);try{const r=await call("topics_merge",{...mergePlan,confirm:true});mergePlan=null;$("mergestatus").textContent="Состояние: "+r.state+". Операция: "+r.operationId+". Отмена доступна в журнале.";await refresh()}catch(e){$("mergestatus").textContent=e.message+" Если ответ потерялся, повтор этой же кнопкой безопасен. Сначала можно проверить журнал."}finally{lockMerge(false)}};
 $("mergeclose").onclick=()=>{$("mergedialog").close();resetMerge()};$("mergedialog").addEventListener("cancel",e=>{if(mergeBusy)e.preventDefault();else resetMerge()});
-function resetUndo(){undoPlan=null;$("mergeundoconfirm").disabled=true;$("mergeundoplan").textContent=""}
-function lockUndo(b){undoBusy=b;for(const id of ["mergeoperation","mergeundopreview","mergelogclose","mergelogmore"])$(id).disabled=b;$("mergeundoconfirm").disabled=b||!undoPlan}
-async function loadMergeLog(offset=0){if(undoBusy)return;resetUndo();lockUndo(true);try{const r=await call("topics_merges_list",{offset});mergeNext=r.nextOffset;$("mergeoperation").replaceChildren();for(const op of r.operations){const o=el("option",op.primaryTitle+" ← "+op.secondaryTitle+" · "+op.state+" · "+op.createdAt);o.value=op.id;$("mergeoperation").append(o)}$("mergelogmore").hidden=mergeNext===null;$("mergeundostatus").textContent=r.operations.length?"Выбери операцию и просмотри отмену.":"Объединений пока нет."}catch(e){$("mergeundostatus").textContent=e.message}finally{lockUndo(false)}}
-$("mergelog").onclick=()=>{$("mergelogdialog").showModal();loadMergeLog()};$("mergelogmore").onclick=()=>{if(mergeNext!==null)loadMergeLog(mergeNext)};$("mergeoperation").onchange=resetUndo;
-$("mergeundopreview").onclick=async()=>{if(undoBusy)return;resetUndo();lockUndo(true);try{const operationId=$("mergeoperation").value,p=await call("topics_merge_undo_preview",{operationId});if(p.state==="undone"){$("mergeundostatus").textContent="Уже отменено.";return}undoPlan={operationId,previewDigest:p.digest};$("mergeundoplan").textContent=describeMerge(p);$("mergeundostatus").textContent=p.notice}catch(e){$("mergeundostatus").textContent=e.message}finally{lockUndo(false)}};
-$("mergeundoconfirm").onclick=async()=>{if(undoBusy||!undoPlan)return;lockUndo(true);try{await call("topics_merge_undo",{...undoPlan,confirm:true});resetUndo();$("mergeundostatus").textContent="Объединение отменено. История и выбор сохранены.";await refresh()}catch(e){$("mergeundostatus").textContent=e.message+" Повтор той же отмены безопасен."}finally{lockUndo(false)}};
-$("mergelogclose").onclick=()=>{$("mergelogdialog").close();resetUndo()};$("mergelogdialog").addEventListener("cancel",e=>{if(undoBusy)e.preventDefault();else resetUndo()});
+let journalScope=null,journalOps=[];
+const selectedOperation=()=>journalOps.find(op=>op.id===$("mergeoperation").value);
+function journalControls(){
+ const canPreview=selectedOperation()?.state==="applied";
+ const canConfirm=canPreview&&undoPlan?.operationId===$("mergeoperation").value;
+ for(const [id,show] of [["mergeoperation",journalOps.length>0],["mergelogmore",mergeNext!==null],["mergeundopreview",canPreview],["mergeundoconfirm",canConfirm]]){
+   $(id).hidden=!show;$(id).disabled=undoBusy||!show;
+ }
+ $("undonotice").hidden=!canPreview;
+ $("mergelogclose").disabled=undoBusy;
+}
+function resetUndo(){undoPlan=null;$("mergeundoplan").textContent="";journalControls()}
+function clearJournal(){
+ journalScope=null;journalOps=[];mergeNext=null;
+ $("mergeoperation").replaceChildren();resetUndo();
+}
+function journalScopeMessage(error){
+ const issue=error.scopeIssue, message=error.message||"";
+ if(issue==="missing"||/контекст чата недоступен/i.test(message))return "Панель не получила контекст беседы. Открой журнал заново из этого чата.";
+ if(issue==="changed")return "Контекст панели изменился. Закрой журнал и открой Навигатор в исходном чате.";
+ if(issue==="unconfirmed"||/контекст[^.]*не подтвержд[её]н/i.test(message))return "Журнал ждёт привязки этого чата. Попроси Навигатор проверить привязку, подтверди её и открой журнал снова.";
+ return "";
+}
+function journalError(error,fallback){
+ const message=journalScopeMessage(error);
+ if(message)clearJournal();
+ $("mergeundostatus").textContent=message||fallback;
+}
+function journalSelectionChanged(){
+ resetUndo();
+ $("mergeundostatus").textContent=selectedOperation()?.state==="applied"
+   ?"Выбери «Показать отмену», чтобы проверить обе темы."
+   :"Для этой операции отмена недоступна.";
+}
+function operationLabel(op){
+ return op.primaryTitle+" ← "+op.secondaryTitle+" · "+(op.state==="undone"?"Отменено":op.state==="applied"?"Объединено":"В обработке")+" · "+op.createdAt;
+}
+function markUndone(op){
+ op.state="undone";
+ const option=[...$("mergeoperation").children].find(row=>row.value===op.id);
+ if(option)option.textContent=operationLabel(op);
+}
+async function loadMergeLog(offset=0){
+ if(undoBusy)return;
+ const expected=openingFingerprint||(offset?journalScope:catalogFingerprint);
+ undoBusy=true;clearJournal();$("mergeundostatus").textContent="Загружаю журнал…";
+ try{
+   const r=await call("topics_merges_list",{offset,...(expected?{expectedScopeFingerprint:expected}:{})});
+   if(!/^[a-f0-9]{64}$/.test(r.scopeFingerprint)||(expected&&expected!==r.scopeFingerprint)||(openingFingerprint&&openingFingerprint!==r.scopeFingerprint))
+     throw toolError("","changed");
+   journalScope=r.scopeFingerprint;journalOps=r.operations;mergeNext=r.nextOffset;
+   for(const op of journalOps){
+     const option=el("option",operationLabel(op));
+     option.value=op.id;$("mergeoperation").append(option);
+   }
+   if(journalOps.length){$("mergeoperation").value=journalOps[0].id;journalSelectionChanged()}
+   else $("mergeundostatus").textContent="В этом чате пока нет объединений.";
+ }catch(e){clearJournal();journalError(e,"Не удалось загрузить журнал. Закрой его и открой снова.")}
+ finally{undoBusy=false;journalControls()}
+}
+$("mergelog").onclick=()=>{$("mergelogdialog").showModal();return loadMergeLog()};
+$("mergelogmore").onclick=()=>{if(mergeNext!==null)return loadMergeLog(mergeNext)};
+$("mergeoperation").onchange=journalSelectionChanged;
+$("mergeundopreview").onclick=async()=>{
+ const operation=selectedOperation();
+ if(undoBusy||!journalScope||operation?.state!=="applied")return;
+ undoBusy=true;resetUndo();
+ try{
+   const operationId=operation.id;
+   const p=await call("topics_merge_undo_preview",{operationId,expectedScopeFingerprint:journalScope});
+   if(p.state==="undone"){markUndone(operation);$("mergeundostatus").textContent="Это объединение уже отменено.";return}
+   undoPlan={operationId,previewDigest:p.digest,expectedScopeFingerprint:journalScope};
+   $("mergeundoplan").textContent=describeMerge(p);$("mergeundostatus").textContent=p.notice;
+ }catch(e){journalError(e,e.message)}
+ finally{undoBusy=false;journalControls()}
+};
+$("mergeundoconfirm").onclick=async()=>{
+ const operation=selectedOperation();
+ if(undoBusy||!undoPlan||!journalScope||operation?.state!=="applied"||operation.id!==undoPlan.operationId)return;
+ undoBusy=true;journalControls();
+ try{
+   await call("topics_merge_undo",{...undoPlan,confirm:true});
+   markUndone(operation);resetUndo();$("mergeundostatus").textContent="Объединение отменено. История и выбор сохранены.";
+   await refresh();
+ }catch(e){journalError(e,e.message)}
+ finally{undoBusy=false;journalControls()}
+};
+$("mergelogclose").onclick=()=>{$("mergelogdialog").close();clearJournal()};
+$("mergelogdialog").addEventListener("cancel",e=>{if(undoBusy)e.preventDefault();else clearJournal()});
 let parentLoad=0,treeEpoch=0;
+const expandedBranches=new Set();
 async function loadBranch(container,parentId,offset=0,epoch=treeEpoch){
  const loading=el("p","Загружаю ветвь…");container.append(loading);
  try{const r=await call("topics_list",{parentId,limit:100,offset});if(epoch!==treeEpoch)return;loading.remove();
- for(const t of r.topics){const branch=el("details",undefined,"card"),summary=el("summary",t.title+" · "+labels[t.status]);branch.append(summary);const info=el("div");info.append(el("p",t.summary||"Нет описания"));const actions=el("div",undefined,"actions");actions.append(button("Изменить / переместить",()=>edit(t)),button("Выбрать для аккаунта",async()=>{try{await call("topics_select",{id:t.id});await refresh()}catch(e){msg(e.message)}}));info.append(actions);const children=el("div");info.append(children);branch.append(info);let loaded=false;branch.ontoggle=()=>{if(branch.open&&!loaded){loaded=true;loadBranch(children,t.id,0,epoch)}};container.append(branch)}
- if(r.nextOffset!==null){const more=button("Ещё темы в этой ветви",()=>{more.remove();loadBranch(container,parentId,r.nextOffset,epoch)});container.append(more)}else if(!r.topics.length&&offset===0)container.append(el("p","Подтем нет."));
+ for(const t of r.topics){const branch=el("details",undefined,"card"),summary=el("summary",t.title+" · "+labels[t.status]);branch.append(summary);const info=el("div");info.append(el("p",t.summary||"Нет описания"));const actions=el("div",undefined,"actions");actions.append(button("Выбрать для чата",()=>chooseTopic(t)),button("Изменить / переместить",()=>edit(t)));info.append(actions);const children=el("div");info.append(children);branch.append(info);let loaded=false;branch.ontoggle=()=>{if(epoch!==treeEpoch)return;if(branch.open){expandedBranches.add(t.id);if(!loaded){loaded=true;loadBranch(children,t.id,0,epoch)}}else expandedBranches.delete(t.id)};container.append(branch);if(expandedBranches.has(t.id)){branch.open=true;branch.ontoggle()}}
+ if(r.nextOffset!==null){const more=button("Ещё темы в этой ветви",()=>{more.remove();loadBranch(container,parentId,r.nextOffset,epoch)});container.append(more)}else if(!r.topics.length&&offset===0)container.append(el("p",parentId===null?emptyChat:"Подтем нет."));
  }catch(e){if(epoch===treeEpoch){loading.textContent=e.message;container.append(button("Повторить загрузку ветви",()=>{container.replaceChildren();loadBranch(container,parentId,0,epoch)}))}}
 }
 function refreshTree(){treeEpoch++;$("treeitems").replaceChildren();if($("tree").open)loadBranch($("treeitems"),null)}
@@ -110,7 +284,9 @@ $("send").onclick=()=>transfer(true);$("draft").onclick=()=>transfer(false);
 $("attach").onclick=async()=>{try{$("attach").disabled=true;await attachContext(contextTopic);$("contextstatus").textContent="Контекст закреплён без отправки сообщения."}catch(e){$("contextstatus").textContent=e.message}finally{$("attach").disabled=false}};
 $("copy").onclick=async()=>{try{await navigator.clipboard.writeText($("contexttext").value);$("contextstatus").textContent="Скопировано."}catch{$("contexttext").focus();$("contexttext").select();$("contextstatus").textContent="Текст выделен: скопируй вручную."}};
 $("add").onclick=()=>edit(null);$("cancel").onclick=()=>$("editor").close();$("contextclose").onclick=()=>$("context").close();$("refresh").onclick=refresh;$("search").oninput=()=>{clearTimeout(queryTimer);queryTimer=setTimeout(()=>{offset=0;refresh()},300)};for(const id of ["filter","groupfilter","tagfilter","sort","pinnedfilter"])$(id).onchange=()=>{offset=0;refresh()};$("prev").onclick=()=>{offset=Math.max(0,offset-30);refresh()};$("next").onclick=()=>{if(nextOffset!==null){offset=nextOffset;refresh()}};
-(async()=>{if(parent!==window){try{const r=await rpc("ui/initialize",{appInfo:{name:"Навигатор тем Nlit",version:"1.8.1"},appCapabilities:{availableDisplayModes:["inline","fullscreen"]},protocolVersion:"2026-01-26"});embedded=true;caps=r.hostCapabilities||{};hostName=r.hostInfo?.name||"ChatGPT / Codex";hostVersion=r.hostInfo?.version||"";applyHost(r.hostContext);parent.postMessage({jsonrpc:"2.0",method:"ui/notifications/initialized"},hostOrigin||"*")}catch(e){msg("Мост приложения недоступен. Открой приватную веб-версию или попробуй плагин заново.");return}}ready=true;diagnostics();await refresh()})();
+(async()=>{if(parent!==window){try{const r=await rpc("ui/initialize",{appInfo:{name:"Навигатор тем",version:"1.8.1-chat-scope.1"},appCapabilities:{availableDisplayModes:["inline","fullscreen"]},protocolVersion:"2026-01-26"});embedded=true;caps=r.hostCapabilities||{};hostName=r.hostInfo?.name||"ChatGPT / Codex";hostVersion=r.hostInfo?.version||"";applyHost(r.hostContext);parent.postMessage({jsonrpc:"2.0",method:"ui/notifications/initialized"},hostOrigin||"*")}catch(e){msg("Мост приложения недоступен. Попробуй открыть плагин заново в чате.");return}}ready=true;diagnostics();await refresh()})();
+// Refresh stored cards while the panel is visible. This does not request conversation text.
+if(typeof window.setInterval==="function")window.setInterval(()=>{if(ready&&embedded&&document.visibilityState==="visible"&&!document.querySelector("dialog[open]"))return refresh(true)},12000);
 window.addEventListener("focus",()=>{if(ready&&!document.querySelector("dialog[open]"))refresh()});
 document.addEventListener("visibilitychange",()=>{if(ready&&document.visibilityState==="visible"&&!document.querySelector("dialog[open]"))refresh()});
 </script></body></html>
