@@ -1,0 +1,1 @@
+CREATE INDEX `topics_owner_parent_idx` ON `topics` (`owner`,`parent_id`);

@@ -1,0 +1,11 @@
+# 1.8.1 read-only scope capability probe
+
+`topics_scope_diagnostics` has no arguments. The MCP HTTP handler examines only the actual request's `params._meta['openai/session']`. Tool arguments and top-level metadata cannot supply it. `/api/topics` always returns unavailable, even if caller submits metadata in its body. No database access, migration, source reading, selection changes, catalog filtering or isolation is added.
+
+Owner authentication remains the existing Sites wrapper's `oai-authenticated-user-id` header. This probe does not validate that wrapper or introduce a new authentication mechanism. MCP session metadata is client-supplied transport information, not trusted authorization, proof of a conversation ID or evidence that a session is stable across calls/devices. A caller who controls the raw request can spoof metadata. Ordinary argument spoofing cannot affect the probe.
+
+Output contains presence, value type, format status, a format-valid boolean and optional SHA-256 fingerprint of the unambiguous JSON tuple `[domain, authenticated owner, session value]`. It never returns the raw owner, session, other metadata or headers, and does not log or store them. The fingerprint is not a credential, encryption or keyed pseudonym: predictable values can be guessed by someone who knows the owner. Tool request/response transcripts and infrastructure may retain their own records; this code does not promise platform-wide nonretention.
+
+Supported diagnostic format: a string of 1–512 JavaScript code units without whitespace or control characters, preserved exactly. Non-string values are unsupported rather than guessed/coerced. Missing metadata returns unavailable. Format validity does NOT establish authentic or useful scope. This limit is a local safe probe format, not an asserted upstream protocol specification. No raw value is disclosed for malformed/overlong inputs.
+
+Version 1.8.1 leaves the shared account catalog and current selection routing unchanged. Real host capability must be tested after controlled deployment before any isolation architecture is chosen. Unit/server protocol tests do not establish that native ChatGPT or Dot forwards this metadata. Read-only annotations and empty input schema are advertised; input arguments are ignored defensively at runtime.

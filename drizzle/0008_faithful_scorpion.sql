@@ -1,0 +1,1 @@
+ALTER TABLE `topics` ADD `bindings` text DEFAULT '[]' NOT NULL;

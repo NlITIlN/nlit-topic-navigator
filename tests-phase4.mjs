@@ -1,0 +1,22 @@
+import {readFileSync} from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
+const script=readFileSync('lib/view.html','utf8').match(/<script>([\s\S]*)<\/script>/)[1];
+class Element{addEventListener(){}constructor(){this.style={setProperty(){}};this.children=[];this.value='';this.hidden=false;this.disabled=false;this.open=false;this.elements={}}append(...x){this.children.push(...x)}replaceChildren(...x){this.children=x}showModal(){this.open=true}close(){this.open=false}}
+const nodes=new Map();const node=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id)};
+let fetchCalls=[];const topic={id:'safe',title:'Безопасный тест',revision:4,updatedAt:'today',summary:'Контекст',decisions:'Решения',nextStep:'Не запускать',sources:[]};
+const ctx={console,setTimeout,clearTimeout,URL,Blob,Map,Promise,FormData:class{},navigator:{clipboard:{writeText:async()=>{}}},document:{getElementById:node,createElement:()=>new Element(),documentElement:new Element(),body:new Element(),addEventListener(){},querySelector(){return null},visibilityState:'visible'},fetch:async(_,o)=>{const b=JSON.parse(o.body);fetchCalls.push(b);return {ok:true,json:async()=>b.name==='topics_list'?{topics:[],total:0,nextOffset:null}:b.name==='topics_context'?{topic,text:'saved context'}:{topic:null}}}};
+ctx.window=ctx;ctx.parent=ctx;ctx.addEventListener=()=>{};vm.createContext(ctx);vm.runInContext(script,ctx);await new Promise(r=>setTimeout(r,0));
+assert.match(node('compattext').textContent,/Самостоятельная веб-версия/);
+assert.equal(vm.runInContext('supportsContext()',ctx),false);
+vm.runInContext('embedded=true;caps={message:{text:{}},experimental:{"openai/message":{}},updateModelContext:{structuredContent:{}}};var events=[];rpc=async(method,params)=>{events.push({method,params});if(method==="tools/call")return {structuredContent:{topic:{id:"safe",title:"Тест",revision:4,updatedAt:"today",summary:"Сводка",decisions:"",nextStep:"",sources:[]},text:"context"}};return {}};',ctx);
+await vm.runInContext('attachContext({id:"safe"})',ctx);
+const events=JSON.parse(vm.runInContext('JSON.stringify(events)',ctx));assert.deepEqual(events.map(e=>e.method),['tools/call','ui/update-model-context']);assert.equal(events[1].params.structuredContent.topicId,'safe');assert.equal(node('threadcontext').hidden,false);
+assert.equal(events.some(e=>e.params?.name==='topics_select'),false);
+vm.runInContext('applyHost({"openai/modelContext":null})',ctx);assert.equal(node('threadcontext').hidden,true);
+vm.runInContext('applyHost({"openai/modelContext":{structuredContent:{app:"nlit-topic-navigator",version:1,topicId:"other",title:"Другая беседа",revision:2}}})',ctx);assert.equal(vm.runInContext('conversationTopic.id',ctx),'other');
+await vm.runInContext('showContext({id:"safe"})',ctx);assert.equal(node('draft').hidden,false);assert.equal(node('attach').hidden,false);
+await vm.runInContext('transfer(false)',ctx);let transfer=JSON.parse(vm.runInContext('JSON.stringify(events.at(-1))',ctx));assert.equal(transfer.params._meta['openai/message'].send,false);assert.equal(transfer.params._meta['openai/message'].target,'active');
+await vm.runInContext('transfer(true)',ctx);transfer=JSON.parse(vm.runInContext('JSON.stringify(events.at(-1))',ctx));assert.equal(transfer.params._meta['openai/message'].send,true);assert.equal(node('send').disabled,true);
+vm.runInContext('caps={message:{text:{}}}',ctx);await vm.runInContext('showContext({id:"safe"})',ctx);assert.equal(node('draft').hidden,true);assert.equal(node('attach').hidden,true);assert.equal(node('send').hidden,false);
+vm.runInContext('caps={}',ctx);await vm.runInContext('showContext({id:"safe"})',ctx);assert.equal(node('send').hidden,true);
+vm.runInContext('caps={message:{text:{}}};rpc=async()=>{throw Error("timeout")}',ctx);await vm.runInContext('transfer(true)',ctx);assert.match(node('contextstatus').textContent,/Статус передачи неизвестен/);assert.equal(node('send').disabled,true);
+console.log('PASS phase4: web fallback, capability gating, per-instance context attach/clear/restore, no global selection mutation, explicit draft/send separation, uncertain-send lockout');
